@@ -8,6 +8,8 @@
 #define N_COINPOS            12
 #define MAX_COIN             4
 
+#define MAX_SHARKSTEP        6
+#define SHARK_INITPOS        -4
 
 static int board_status[N_BOARD];//static은... 
 static int board_coin[N_BOARD];
@@ -18,9 +20,11 @@ int board_initBoard(void)
 {
     int i;
     for (i=0;i<N_BOARD;i++)
-        board_status[i] = BOARDSTATUS_OK;//???
-        board_coin[i] = 0;
+        board_status[i] = BOARDSTATUS_OK;
+        board_coin[i] = 0; ////////////////////////////////////////////////
         
+    board_sharkPosition = SHARK_INITPOS;
+     
     for (i=0;i<N_COINPOS;i++)
     {
         int flag = 0;
@@ -29,7 +33,7 @@ int board_initBoard(void)
               int allocPos = rand()%N_BOARD;
               if (board_coin[allocPos] == 0)
               {
-                 board_coin[allocPos] = rand()%MAX_COIN+1;//????
+                 board_coin[allocPos] = rand()%MAX_COIN+1;
                  flag = 1;
               }
         }
@@ -41,7 +45,7 @@ int board_printBoardStatus(void)
 {
     int i;
     
-    printf("----------- BOARD STATUS -----------\n");
+    printf("--------- BOARD STATUS ---------\n");
     for (i=0;i<N_BOARD;i++)
     {
         printf("|");
@@ -50,8 +54,7 @@ int board_printBoardStatus(void)
         else
             printf("O");
     }
-    printf("|");
-    printf("------------------------------------\n");
+    printf("|\n");
     
     return 0;
 }
@@ -64,10 +67,23 @@ int board_getBoardStatus(int pos)//위치로...??
 
 int board_getBoardCoin(int pos)
 {
-    int coin = board_coin[pos];//지역변수 필요...ㅇ.ㅠ 
+    int coin = board_coin[pos];//지역변수 필요... 
     board_coin[pos] = 0;//동전을 먹어서 사라짐 
-    return board_coin[pos];
+    return coin;
 }
 
-int board_getSharkPosition(void);
-int board_stepShark(void);//입력이 필요 없으니까 void인 것이야요
+//int board_getSharkPosition(void);
+int board_stepShark(void)
+{
+    int step = rand()%MAX_SHARKSTEP + 1;
+    int i;
+    for (i=board_sharkPosition+1;i<=board_sharkPosition+step;i++)
+    {
+          if (i>=0 && i<N_BOARD)
+             board_status[i] = BOARDSTATUS_NOK;
+    }
+    
+    board_sharkPosition += step;
+    
+    return board_sharkPosition; 
+}
