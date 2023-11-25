@@ -77,11 +77,18 @@ void checkDie(void)
            player_status[i] = PLAYERSTATUS_DIE;
 }
 
+
+void getAlivePlayer(void);
+void getWinner(void);
+
+ 
 int main(int argc, char *argv[])
 {
   int pos = 0;
   int i;
+ 
   srand((unsigned)time(NULL));
+  
   //0. opening 
   opening();
   
@@ -118,10 +125,7 @@ int main(int argc, char *argv[])
       for (i=0;i<N_PLAYER;i++)
           printPlayerPosition(i);
       printPlayerStatus();
-      
-      step = rolldie();
-      pos += step;
-      coinResult = board_getBoardCoin(pos);
+     
 
       
       
@@ -131,6 +135,7 @@ int main(int argc, char *argv[])
       scanf("%d",&c);
       fflush(stdin);
       step = rolldie();
+      pos += step;
      
       
       //2-3. 이동
@@ -142,22 +147,23 @@ int main(int argc, char *argv[])
       if (player_position[turn] == N_BOARD-1)
          player_status[turn] = PLAYERSTATUS_END;
           
-      printf("%i번째 칸...\n",player_position[turn]);      
+      printf("주사위 %i, %i번째 칸으로 이동...\n",step, player_position[turn]);      
       
       //2-4. 동전 줍기
-      coinResult = board_getBoardCoin(pos);
+      coinResult = board_getBoardCoin(player_position[turn]);
       player_coin[turn] += coinResult; 
-      printf("동전 %i개...\n", player_coin[turn]);
+      if (coinResult != 0)
+         printf("동전 %d개 줍다...\n", coinResult);
        
       //2-5. 다음턴으로...
       turn = (turn + 1)%N_PLAYER;//wrap around
       
-      //2-6. 상어 동작(if (모든 플레이어가 돌아~~~))
-      if (turn == 0)
+      //2-6. 상어 동작(if (모든 플레이어가 돌아~~~)
+      if (turn == 0)//???
       {
          int shark_pos = board_stepShark();
-         printf("상어 %i번쨰칸으로 이동\n",shark_pos);
-         checkDie();      
+         printf("상어 %i번째 칸으로 이동\n",shark_pos);
+         checkDie(); 
       }
       
       
