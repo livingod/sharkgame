@@ -17,7 +17,7 @@
 int player_position[N_PLAYER];
 char player_name[N_PLAYER][MAX_CHARNAME];
 int player_coin[N_PLAYER];
-int player_status[N_PLAYER];//헷갈~ 
+int player_status[N_PLAYER];
 //player_status[0] = PLAYERSTATUS_DIE       플레이어 0이 죽었다~는 뜻 
 char player_statusString[3][MAX_CHARNAME] = {"LIVE","DIE","END"};
 
@@ -88,7 +88,6 @@ int game_end(void)
     int i;
     int flag_end = 1;
     
-    //if all the players are died?
     for (i=0;i<N_PLAYER;i++)
     {
         if (player_status[i] == PLAYERSTATUS_LIVE)
