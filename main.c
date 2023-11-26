@@ -71,11 +71,17 @@ void printPlayerStatus(void)
 
 void checkDie(void)
 {
-     int i;
-     for(i=0;i<N_PLAYER;i++)
-       if (board_getBoardStatus(player_position[i]) == BOARDSTATUS_NOK)
-           player_status[i] = PLAYERSTATUS_DIE;
+    int i;
+    for (i = 0; i < N_PLAYER; i++)
+    {
+        if (player_status[i] == PLAYERSTATUS_LIVE && board_getBoardStatus(player_position[i]) == BOARDSTATUS_NOK)
+        {
+            player_status[i] = PLAYERSTATUS_DIE;
+            printf("%s 죽음\n", player_name[i]);
+        }
+    }
 }
+//상어가 지나갈 당시에 죽은 플레이어만 표시 
 
 int game_end(void)
 {
@@ -134,7 +140,7 @@ int main(int argc, char *argv[])
   int pos = 0;
   int i;
   int flag_end = 0;
-  int cnt = 0;
+  int cnt = 0;//생존자 수 
   int winner;
   
  
@@ -204,7 +210,7 @@ int main(int argc, char *argv[])
       coinResult = board_getBoardCoin(player_position[turn]);
       player_coin[turn] += coinResult; 
       if (coinResult != 0)
-         printf("동전 %d개 줍다...\n", coinResult);
+         printf("   →동전 %d개 줍다...\n", coinResult);
        
       //2-5. 다음턴으로...
       turn = (turn + 1)%N_PLAYER;//wrap around
@@ -214,13 +220,12 @@ int main(int argc, char *argv[])
       {
          int shark_pos = board_stepShark();
          printf("상어 %i번째 칸으로 이동\n",shark_pos);
-         checkDie(); 
+         checkDie();
       }
       
       
       flag_end = game_end(); 
-      } while 
-      (flag_end == 0);
+      } while(flag_end == 0);
       
       printf("게임 끝!!!!!!!!!!!!\n");
       
