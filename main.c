@@ -77,15 +77,66 @@ void checkDie(void)
            player_status[i] = PLAYERSTATUS_DIE;
 }
 
+int game_end(void)
+{
+    int i;
+    int flag_end = 1;
+    
+    //if all the players are died?
+    for (i=0;i<N_PLAYER;i++)
+    {
+        if (player_status[i] == PLAYERSTATUS_LIVE)
+        {
+           flag_end = 0;
+           break;
+        }
+    }
+    
+    return flag_end; 
+}
 
-void getAlivePlayer(void);
-void getWinner(void);
+
+int getAlivePlayer(void)
+{
+    int i;
+    int cnt = 0;
+    for (i=0;i<N_PLAYER;i++)
+    {
+        if (player_status[i] == PLAYERSTATUS_END)
+           cnt++;
+    }
+    
+    return cnt;
+}
+
+
+int getWinner(void)
+{
+    int i;
+    int winner = 0;
+    int max_coin = -1;
+    
+    for (i=0;i<N_PLAYER;i++)
+    {
+        if (player_coin[i] > max_coin)
+        {
+           max_coin = player_coin[i];
+           winner = i;
+        }
+    }
+    
+    return winner;
+}
 
  
 int main(int argc, char *argv[])
 {
   int pos = 0;
   int i;
+  int flag_end = 0;
+  int cnt = 0;
+  int winner;
+  
  
   srand((unsigned)time(NULL));
   
@@ -167,10 +218,24 @@ int main(int argc, char *argv[])
       }
       
       
-      } while(1);
+      flag_end = game_end(); 
+      } while 
+      (flag_end == 0);
+      
+      printf("게임 끝!!!!!!!!!!!!\n");
+      
         
       //3. 정리(승자 계산, 출력 등...) 
+      
+      //3-1. 생존 플레이어 수
+      cnt = getAlivePlayer();
+      printf("%d명 생존\n",cnt);
+      
+      //3-2. 승자 결정
+      winner = getWinner(); 
+      printf("%s 승\n",player_name[winner]);
   
+
   system("PAUSE");	
   return 0;
 }
